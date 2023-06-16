@@ -1,24 +1,23 @@
 
 const temperatureField = document.querySelector(".temp");
 const cityField = document.querySelector(".time_location p");
-const dataField = document.querySelector(".time_location span");
+const dateField = document.querySelector(".time_location span");
 const emojiField = document.querySelector(".weather_condition img");
-const weatherField = document.querySelector(".weather condition span");
+const weatherField = document.querySelector(".weather_condition span");
 const searchField = document.querySelector(".searchField");
 const form =  document.querySelector("form");
 
-let target = "london"
+let target = "London"
 
 form.addEventListener("submit",function(e){
     e.preventDefault();
     target=searchField.value;
-    console.log(target);
-    fetchdata(target);
+    fetchData(target);
 })
 
-async function fetchdata(target){
+async function fetchData(target){
     try{
-        let url = `https://api.weatherapi.com/v1/current.json?key=3cd66344bfc843ea8c084210231306&q=London&aqi=no`
+        let url = `https://api.weatherapi.com/v1/current.json?key=3cd66344bfc843ea8c084210231306&q=${target}&aqi=no`
         let response = await fetch(url);
         let data = await response.json();
         let currentTemp = data.current.temp_c;
@@ -31,15 +30,33 @@ async function fetchdata(target){
     }
     catch(error){
         alert("please put a valid location");
-        condole.log(error);
+        console.log(error);
     }
 }
 
 function updateDOM(temp,locationName,time,emoji,condition){
     let exactTime = time.split(" ")[1];
     let exactDate = time.split(" ")[0];
-    let countofDay = new Date(exactDate).getDay();
-    let nameofday = getNameofDay(countofDay);
+    let countOfDay = new Date(exactDate).getDay();
+    let nameofDay = getNameOfDay(countOfDay);
     dateField.innerText = `${exactTime} ${nameofDay} ${exactDate}`
-    temperatureField.innerText
+    temperatureField.innerText = temp;
+    cityField.innerText = locationName;
+    emojiField.src = emoji;
+    weatherField.innerText = condition;
 }
+
+let dayObject = {
+    0:"Sunday",
+    1:"Monday",
+    2:"Tuesday",
+    3:"Wednesday",
+    4:"Thursday",
+    5:"Friday",
+    6:"Saturday"
+}
+
+function getNameOfDay(num){
+    return dayObject[num];
+}
+fetchData(target);
